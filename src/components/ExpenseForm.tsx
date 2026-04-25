@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Plus, Calendar, Tag, CreditCard, MessageSquare } from 'lucide-react';
+import { X, Plus, Calendar, Tag, MessageSquare, ScanLine } from 'lucide-react';
 import { CATEGORIES, EventItem } from '../types';
 import { expenseService } from '../lib/expenseService';
 import { auth } from '../lib/firebase';
@@ -23,6 +23,60 @@ export function ExpenseForm({ events, onSuccess, onCancel }: ExpenseFormProps) {
   const [description, setDescription] = useState('');
   const [eventId, setEventId] = useState('');
   const [loading, setLoading] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleScanReceipt = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setScanning(true);
+    try {
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const base64Data = reader.result?.toString().split(',')[1];
+        if (!base64Data) throw new Error('Failed to read file');
+
+        const response = await fetch('/api/scan-receipt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            imageBase64: base64Data,
+            mimeType: file.type
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to scan receipt');
+        }
+
+        const data = await response.json();
+        
+        // Populate form with AI extracted data
+        if (data.total_amount) setAmount(data.total_amount.toString());
+        if (data.date) setDate(data.date);
+        if (data.merchant_name) setDescription(data.merchant_name);
+        
+        // Map predicted category if it exists in our categories list
+        if (data.predicted_category) {
+          const matchedCategory = CATEGORIES.find(c => 
+            c.toLowerCase() === data.predicted_category.toLowerCase()
+          );
+          if (matchedCategory) setCategory(matchedCategory);
+        }
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Error scanning receipt:', error);
+      alert('Failed to extract data from receipt. ' + (error as Error).message);
+    } finally {
+      setScanning(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,8 +112,36 @@ export function ExpenseForm({ events, onSuccess, onCancel }: ExpenseFormProps) {
           <Plus className="w-5 h-5 text-indigo-500" />
           Add Expense
         </h2>
-        <button onClick={onCancel} className="p-2 hover:bg-zinc-100 rounded-full transition-colors">
+        <button onClick={onCancel} className="p-2 hover:bg-zinc-100 rounded-full transition-colors hidden-sm" disabled={scanning}>
           <X className="w-5 h-5 text-zinc-400" />
+        </button>
+      </div>
+
+      <div className="mb-6">
+        <input 
+          type="file" 
+          accept="image/*" 
+          ref={fileInputRef} 
+          className="hidden" 
+          onChange={handleScanReceipt} 
+        />
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={scanning || loading}
+          className="w-full py-3 bg-indigo-50 text-indigo-600 rounded-xl font-medium hover:bg-indigo-100 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2 border border-indigo-100"
+        >
+          {scanning ? (
+             <>
+               <div className="w-5 h-5 border-2 border-indigo-600/30 border-t-indigo-600 rounded-full animate-spin" />
+               Extracting receipt data...
+             </>
+          ) : (
+            <>
+              <ScanLine className="w-5 h-5" />
+              Scan Receipt with AI
+            </>
+          )}
         </button>
       </div>
 
@@ -145,7 +227,7 @@ export function ExpenseForm({ events, onSuccess, onCancel }: ExpenseFormProps) {
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || scanning}
           className="w-full py-3 bg-zinc-900 text-white rounded-xl font-medium hover:bg-zinc-800 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
         >
           {loading ? (
