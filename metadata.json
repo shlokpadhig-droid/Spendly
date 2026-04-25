@@ -1,0 +1,6 @@
+{
+  "name": "Spendly",
+  "description": "A smart personal expense tracker with category budgets and visual spending summaries.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

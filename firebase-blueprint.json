@@ -1,0 +1,54 @@
+{
+  "entities": {
+    "expense": {
+      "title": "Expense",
+      "description": "An individual spending record",
+      "type": "object",
+      "properties": {
+        "amount": { "type": "number", "description": "Amount spent" },
+        "category": { "type": "string", "description": "Expense category (e.g., Food, Transport)" },
+        "date": { "type": "string", "format": "date-time", "description": "Date of the expense" },
+        "description": { "type": "string", "description": "Details about the spending" },
+        "userId": { "type": "string", "description": "Owner of the record" }
+      },
+      "required": ["amount", "category", "date", "userId"]
+    },
+    "budget": {
+      "title": "Budget",
+      "description": "Monthly budget limit for a category",
+      "type": "object",
+      "properties": {
+        "category": { "type": "string", "description": "Category name" },
+        "limit": { "type": "number", "description": "Budget limit amount" },
+        "period": { "type": "string", "description": "Period for the budget (e.g., 2024-04)" },
+        "userId": { "type": "string", "description": "Owner of the budget" }
+      },
+      "required": ["category", "limit", "period", "userId"]
+    },
+    "userProfile": {
+      "title": "User Profile",
+      "description": "User specific settings",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "currency": { "type": "string", "description": "Preferred currency symbol" },
+        "email": { "type": "string" }
+      },
+      "required": ["userId"]
+    }
+  },
+  "firestore": {
+    "/expenses/{expenseId}": {
+      "schema": "expense",
+      "description": "Collection of user expenses"
+    },
+    "/budgets/{budgetId}": {
+      "schema": "budget",
+      "description": "Monthly budgets per category"
+    },
+    "/users/{userId}": {
+      "schema": "userProfile",
+      "description": "User profile data"
+    }
+  }
+}
