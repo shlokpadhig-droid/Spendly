@@ -120,8 +120,8 @@ export default function App() {
       <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-zinc-100">
         <div className="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-zinc-900 rounded-xl flex items-center justify-center shadow-lg shadow-zinc-200">
-              <Wallet className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 flex items-center justify-center">
+              <img src="/favicon.svg" alt="Spendly Logo" className="w-full h-full drop-shadow-md" />
             </div>
             <div>
               <h1 className="font-bold text-zinc-900 leading-none">Spendly</h1>
