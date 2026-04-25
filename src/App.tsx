@@ -228,7 +228,7 @@ export default function App() {
       {/* Modal for Expense Form */}
       <AnimatePresence>
         {showForm && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-6 sm:p-20">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -251,7 +251,7 @@ export default function App() {
       {/* Modal for Budget Settings */}
       <AnimatePresence>
         {showBudgets && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-6 sm:p-20">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -273,7 +273,7 @@ export default function App() {
       {/* Modal for Event Form */}
       <AnimatePresence>
         {showEventForm && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-6 sm:p-20">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

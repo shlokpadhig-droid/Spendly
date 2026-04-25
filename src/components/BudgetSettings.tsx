@@ -67,7 +67,7 @@ export function BudgetSettings({ onSaved, onCancel }: BudgetSettingsProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
-      className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-lg border border-zinc-100"
+      className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-lg border border-zinc-100 relative z-10 flex flex-col max-h-[90vh]"
     >
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold flex items-center gap-2">

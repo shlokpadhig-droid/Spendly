@@ -45,7 +45,7 @@ export function EventForm({ onSuccess, onCancel }: EventFormProps) {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md border border-zinc-100"
+      className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md border border-zinc-100 relative z-10 max-h-[90vh] overflow-y-auto"
     >
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold flex items-center gap-2">
