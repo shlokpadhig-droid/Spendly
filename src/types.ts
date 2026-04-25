@@ -12,6 +12,15 @@ export interface Expense {
   date: Date | Timestamp;
   description: string;
   userId: string;
+  eventId?: string;
+}
+
+export interface EventItem {
+  id?: string;
+  name: string;
+  budget: number;
+  date: Date | Timestamp;
+  userId: string;
 }
 
 export interface Budget {

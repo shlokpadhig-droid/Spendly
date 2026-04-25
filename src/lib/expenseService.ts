@@ -18,7 +18,7 @@ import {
   getDoc
 } from 'firebase/firestore';
 import { db, auth } from './firebase';
-import { Expense, Budget } from '../types';
+import { Expense, Budget, EventItem } from '../types';
 
 export enum OperationType {
   CREATE = 'create',
@@ -142,6 +142,60 @@ export const expenseService = {
       );
       const snapshot = await getDocs(q);
       return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Budget));
+    } catch (error) {
+      handleFirestoreError(error, OperationType.LIST, path);
+    }
+  },
+
+  async addEvent(event: Omit<EventItem, 'id'>) {
+    const path = 'events';
+    try {
+      return await addDoc(collection(db, path), {
+        ...event,
+        date: Timestamp.fromDate(event.date as Date)
+      });
+    } catch (error) {
+      handleFirestoreError(error, OperationType.CREATE, path);
+    }
+  },
+
+  async updateEvent(id: string, data: Partial<EventItem>) {
+    const path = `events/${id}`;
+    try {
+      const docRef = doc(db, 'events', id);
+      const updateData = { ...data };
+      if (data.date instanceof Date) {
+        updateData.date = Timestamp.fromDate(data.date);
+      }
+      return await updateDoc(docRef, updateData);
+    } catch (error) {
+      handleFirestoreError(error, OperationType.UPDATE, path);
+    }
+  },
+
+  async deleteEvent(id: string) {
+    const path = `events/${id}`;
+    try {
+      return await deleteDoc(doc(db, 'events', id));
+    } catch (error) {
+      handleFirestoreError(error, OperationType.DELETE, path);
+    }
+  },
+
+  async getUserEvents(userId: string) {
+    const path = 'events';
+    try {
+      const q = query(
+        collection(db, path),
+        where('userId', '==', userId),
+        orderBy('date', 'desc')
+      );
+      const snapshot = await getDocs(q);
+      return snapshot.docs.map(doc => ({ 
+        id: doc.id, 
+        ...doc.data(),
+        date: (doc.data().date as Timestamp).toDate()
+      } as EventItem));
     } catch (error) {
       handleFirestoreError(error, OperationType.LIST, path);
     }

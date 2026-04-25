@@ -9,9 +9,22 @@
         "category": { "type": "string", "description": "Expense category (e.g., Food, Transport)" },
         "date": { "type": "string", "format": "date-time", "description": "Date of the expense" },
         "description": { "type": "string", "description": "Details about the spending" },
-        "userId": { "type": "string", "description": "Owner of the record" }
+        "userId": { "type": "string", "description": "Owner of the record" },
+        "eventId": { "type": "string", "description": "Optional event ID this expense belongs to" }
       },
       "required": ["amount", "category", "date", "userId"]
+    },
+    "event": {
+      "title": "Event",
+      "description": "A specific event with a budget",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Event name" },
+        "budget": { "type": "number", "description": "Budget limit amount" },
+        "date": { "type": "string", "format": "date-time", "description": "Date of the event" },
+        "userId": { "type": "string", "description": "Owner of the event" }
+      },
+      "required": ["name", "budget", "date", "userId"]
     },
     "budget": {
       "title": "Budget",
@@ -41,6 +54,10 @@
     "/expenses/{expenseId}": {
       "schema": "expense",
       "description": "Collection of user expenses"
+    },
+    "/events/{eventId}": {
+      "schema": "event",
+      "description": "Collection of user events"
     },
     "/budgets/{budgetId}": {
       "schema": "budget",

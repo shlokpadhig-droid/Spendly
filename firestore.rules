@@ -32,6 +32,14 @@ service cloud.firestore {
       return data.amount is number && data.amount > 0
           && data.category is string && data.category.size() <= 64
           && data.date is timestamp
+          && data.userId == request.auth.uid
+          && (!('eventId' in data) || (data.eventId is string && data.eventId.size() <= 128));
+    }
+
+    function isValidEvent(data) {
+      return data.name is string && data.name.size() <= 100
+          && data.budget is number && data.budget >= 0
+          && data.date is timestamp
           && data.userId == request.auth.uid;
     }
 
@@ -53,7 +61,7 @@ service cloud.firestore {
     match /expenses/{expenseId} {
       allow create: if isSignedIn() && isValidExpense(incoming()) && isValidId(expenseId);
       allow update: if isSignedIn() && isOwner(existing().userId) && isValidExpense(incoming()) 
-          && incoming().diff(existing()).affectedKeys().hasOnly(['amount', 'category', 'date', 'description']);
+          && incoming().diff(existing()).affectedKeys().hasOnly(['amount', 'category', 'date', 'description', 'eventId']);
       allow delete: if isSignedIn() && isOwner(existing().userId);
       allow get: if isSignedIn() && isOwner(existing().userId);
       allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
@@ -63,6 +71,15 @@ service cloud.firestore {
       allow create: if isSignedIn() && isValidBudget(incoming()) && isValidId(budgetId);
       allow update: if isSignedIn() && isOwner(existing().userId) && isValidBudget(incoming())
           && incoming().diff(existing()).affectedKeys().hasOnly(['limit']);
+      allow delete: if isSignedIn() && isOwner(existing().userId);
+      allow get: if isSignedIn() && isOwner(existing().userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    match /events/{eventId} {
+      allow create: if isSignedIn() && isValidEvent(incoming()) && isValidId(eventId);
+      allow update: if isSignedIn() && isOwner(existing().userId) && isValidEvent(incoming())
+          && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'budget', 'date']);
       allow delete: if isSignedIn() && isOwner(existing().userId);
       allow get: if isSignedIn() && isOwner(existing().userId);
       allow list: if isSignedIn() && resource.data.userId == request.auth.uid;

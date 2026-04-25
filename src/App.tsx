@@ -19,11 +19,13 @@ import {
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth, login, logout } from './lib/firebase';
 import { expenseService } from './lib/expenseService';
-import { Expense, Budget } from './types';
+import { Expense, Budget, EventItem } from './types';
 import { Dashboard } from './components/Dashboard';
 import { ExpenseList } from './components/ExpenseList';
 import { ExpenseForm } from './components/ExpenseForm';
 import { BudgetSettings } from './components/BudgetSettings';
+import { EventTracker } from './components/EventTracker';
+import { EventForm } from './components/EventForm';
 import { format, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns';
 
 export default function App() {
@@ -31,8 +33,10 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [budgets, setBudgets] = useState<Budget[]>([]);
+  const [events, setEvents] = useState<EventItem[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [showBudgets, setShowBudgets] = useState(false);
+  const [showEventForm, setShowEventForm] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   useEffect(() => {
@@ -61,6 +65,9 @@ export default function App() {
       const period = format(currentMonth, 'yyyy-MM');
       const bData = await expenseService.getBudgets(user.uid, period);
       setBudgets((bData || []) as Budget[]);
+
+      const eData = await expenseService.getUserEvents(user.uid);
+      setEvents(eData || []);
     } catch (err) {
       console.error(err);
     }
@@ -169,13 +176,32 @@ export default function App() {
             onClick={() => setShowForm(true)}
             className="h-14 px-8 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-500 shadow-xl shadow-indigo-100 flex items-center justify-center gap-3 transition-all active:scale-[0.98]"
           >
-            <Plus className="w-6 h-6" />
-            New Expense
+            <Plus className="w-5 h-5" />
+            <span className="hidden sm:inline">New Expense</span>
+          </button>
+          
+          <button
+            onClick={() => setShowEventForm(true)}
+            className="h-14 px-8 bg-zinc-900 text-white rounded-2xl font-bold hover:bg-zinc-800 shadow-xl shadow-zinc-200 flex items-center justify-center gap-3 transition-all active:scale-[0.98] ml-3"
+          >
+            <Plus className="w-5 h-5" />
+            <span className="hidden sm:inline">New Event</span>
           </button>
         </div>
 
         <section className="animate-in fade-in slide-in-from-bottom-4 duration-700">
           <Dashboard expenses={filteredExpenses} budgets={budgets} />
+        </section>
+
+        <section className="mt-12 animate-in fade-in slide-in-from-bottom-6 duration-1000">
+          <EventTracker 
+            events={events} 
+            expenses={expenses} 
+            onDelete={async (id) => {
+              await expenseService.deleteEvent(id);
+              loadExpenses();
+            }} 
+          />
         </section>
 
         <section className="mt-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
@@ -211,6 +237,7 @@ export default function App() {
               className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm"
             />
             <ExpenseForm 
+              events={events}
               onSuccess={() => {
                 setShowForm(false);
                 loadExpenses();
@@ -238,6 +265,28 @@ export default function App() {
                 loadExpenses();
               }}
               onCancel={() => setShowBudgets(false)}
+            />
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Modal for Event Form */}
+      <AnimatePresence>
+        {showEventForm && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-6 sm:p-20">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowEventForm(false)}
+              className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm"
+            />
+            <EventForm 
+              onSuccess={() => {
+                setShowEventForm(false);
+                loadExpenses();
+              }}
+              onCancel={() => setShowEventForm(false)}
             />
           </div>
         )}
