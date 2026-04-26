@@ -60,56 +60,58 @@ export function BudgetSettings({ onSaved, onCancel }: BudgetSettingsProps) {
     }
   };
 
-  if (loading) return <div className="p-10 text-center">Loading budgets...</div>;
+  if (loading) return <div className="p-10 text-center text-stone-500 font-medium">Loading budgets...</div>;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
-      className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-lg border border-zinc-100 relative z-10 flex flex-col max-h-[90vh]"
+      className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-lg border border-stone-200 relative z-10 flex flex-col max-h-[90vh]"
     >
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold flex items-center gap-2">
-          <Settings className="w-5 h-5 text-indigo-500" />
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="text-2xl font-serif text-[#3E2723] flex items-center gap-3 tracking-tight">
+          <div className="p-2 bg-stone-50 text-[#5D4037] rounded-xl border border-stone-200 shadow-sm">
+            <Settings className="w-5 h-5" />
+          </div>
           Budget Settings
         </h2>
-        <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">
+        <span className="text-xs font-medium text-stone-500 uppercase tracking-widest bg-stone-50 border border-stone-200 px-3 py-1.5 rounded-lg">
           {format(new Date(), 'MMMM yyyy')}
         </span>
       </div>
 
       <div className="space-y-4 max-h-[60vh] overflow-y-auto px-1">
         {CATEGORIES.map(category => (
-          <div key={category} className="flex items-center gap-4">
-            <span className="flex-1 text-sm font-medium text-zinc-700">{category}</span>
+          <div key={category} className="flex items-center gap-4 bg-stone-50 p-3 rounded-xl border border-stone-200">
+            <span className="flex-1 text-sm font-medium text-stone-700">{category}</span>
             <div className="relative w-32">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-xs">{CURRENCY_SYMBOL}</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 font-medium text-xs">{CURRENCY_SYMBOL}</span>
               <input
                 type="number"
                 value={budgets[category] || ''}
                 onChange={(e) => setBudgets(prev => ({ ...prev, [category]: parseFloat(e.target.value) || 0 }))}
                 placeholder="0"
-                className="w-full pl-7 pr-3 py-1.5 bg-zinc-50 border border-zinc-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none"
+                className="w-full pl-8 pr-3 py-2 bg-white border border-stone-200 rounded-lg text-sm font-medium text-[#3E2723] focus:ring-4 focus:ring-stone-100 focus:border-[#8D6E63] outline-none transition-all shadow-sm"
               />
             </div>
           </div>
         ))}
       </div>
 
-      <div className="mt-8 flex gap-3">
+      <div className="mt-8 flex gap-4">
         <button
           onClick={onCancel}
-          className="flex-1 py-3 bg-zinc-100 text-zinc-600 rounded-xl font-medium hover:bg-zinc-200 transition-all"
+          className="flex-1 py-4 bg-stone-50 text-stone-600 rounded-xl font-medium hover:bg-stone-100 border border-stone-200 transition-all active:scale-[0.98]"
         >
           Cancel
         </button>
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex-1 py-3 bg-zinc-900 text-white rounded-xl font-medium hover:bg-zinc-800 transition-all flex items-center justify-center gap-2"
+          className="flex-1 py-4 bg-[#4E342E] text-white rounded-xl font-medium hover:bg-[#3E2723] transition-all flex items-center justify-center gap-2 shadow-md active:scale-[0.98]"
         >
-          {saving ? <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" /> : <Save className="w-4 h-4" />}
+          {saving ? <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" /> : <Save className="w-5 h-5" />}
           Save Budgets
         </button>
       </div>

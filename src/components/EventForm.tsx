@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { X, Plus, Calendar, Target } from 'lucide-react';
+import { X, Target, Calendar } from 'lucide-react';
 import { expenseService } from '../lib/expenseService';
 import { auth } from '../lib/firebase';
 
@@ -45,35 +45,37 @@ export function EventForm({ onSuccess, onCancel }: EventFormProps) {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md border border-zinc-100 relative z-10 max-h-[90vh] overflow-y-auto"
+      className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-stone-200 relative z-10 max-h-[90vh] overflow-y-auto"
     >
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold flex items-center gap-2">
-          <Target className="w-5 h-5 text-indigo-500" />
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="text-2xl font-serif text-[#3E2723] flex items-center gap-3 tracking-tight">
+          <div className="p-2 bg-stone-50 text-[#5D4037] rounded-xl shadow-sm border border-stone-200">
+            <Target className="w-5 h-5" />
+          </div>
           Create Event
         </h2>
-        <button onClick={onCancel} className="p-2 hover:bg-zinc-100 rounded-full transition-colors">
-          <X className="w-5 h-5 text-zinc-400" />
+        <button onClick={onCancel} className="p-2 hover:bg-stone-50 text-stone-400 hover:text-stone-700 rounded-lg transition-colors border border-transparent">
+          <X className="w-6 h-6" />
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-1">Event Name</label>
+          <label className="block text-xs uppercase tracking-widest font-medium text-stone-500 mb-2">Event Name</label>
           <input
             type="text"
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g., Summer Trip, Wedding"
-            className="w-full px-4 py-2 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none"
+            className="w-full px-5 py-3.5 bg-white border border-stone-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-stone-100 focus:border-[#8D6E63] transition-all outline-none font-medium text-[#3E2723] shadow-sm"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-1">Event Budget</label>
+          <label className="block text-xs uppercase tracking-widest font-medium text-stone-500 mb-2">Event Budget</label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 font-medium">₹</span>
+            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-stone-400 font-medium">₹</span>
             <input
               type="number"
               required
@@ -81,21 +83,21 @@ export function EventForm({ onSuccess, onCancel }: EventFormProps) {
               value={budget}
               onChange={(e) => setBudget(e.target.value)}
               placeholder="0.00"
-              className="w-full pl-8 pr-4 py-2 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none"
+              className="w-full pl-10 pr-4 py-3.5 bg-white border border-stone-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-stone-100 focus:border-[#8D6E63] transition-all outline-none font-medium text-[#3E2723] shadow-sm"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-1">Date</label>
+          <label className="block text-xs uppercase tracking-widest font-medium text-stone-500 mb-2">Date</label>
           <div className="relative">
-            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+            <Calendar className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
             <input
               type="date"
               required
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none"
+              className="w-full pl-12 pr-4 py-3.5 bg-white border border-stone-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-stone-100 focus:border-[#8D6E63] transition-all outline-none font-medium text-[#3E2723] shadow-sm"
             />
           </div>
         </div>
@@ -103,7 +105,7 @@ export function EventForm({ onSuccess, onCancel }: EventFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 bg-zinc-900 text-white rounded-xl font-medium hover:bg-zinc-800 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2 mt-4"
+          className="w-full py-4 mt-6 bg-[#4E342E] text-white rounded-xl font-medium hover:bg-[#3E2723] active:scale-[0.98] transition-all shadow-md disabled:opacity-50 flex items-center justify-center gap-2"
         >
           {loading ? (
             <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

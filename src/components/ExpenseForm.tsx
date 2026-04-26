@@ -105,15 +105,17 @@ export function ExpenseForm({ events, onSuccess, onCancel }: ExpenseFormProps) {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md border border-zinc-100 relative z-10 max-h-[90vh] overflow-y-auto"
+      className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-stone-200 relative z-10 max-h-[90vh] overflow-y-auto"
     >
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold flex items-center gap-2">
-          <Plus className="w-5 h-5 text-indigo-500" />
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="text-2xl font-serif text-[#3E2723] flex items-center gap-3 tracking-tight">
+          <div className="p-2 bg-stone-50 text-[#5D4037] rounded-xl shadow-sm border border-stone-200">
+            <Plus className="w-5 h-5" />
+          </div>
           Add Expense
         </h2>
-        <button onClick={onCancel} className="p-2 hover:bg-zinc-100 rounded-full transition-colors hidden-sm" disabled={scanning}>
-          <X className="w-5 h-5 text-zinc-400" />
+        <button onClick={onCancel} className="p-2 hover:bg-stone-50 text-stone-400 hover:text-stone-700 rounded-lg transition-colors border border-transparent" disabled={scanning}>
+          <X className="w-6 h-6" />
         </button>
       </div>
 
@@ -129,11 +131,11 @@ export function ExpenseForm({ events, onSuccess, onCancel }: ExpenseFormProps) {
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={scanning || loading}
-          className="w-full py-3 bg-indigo-50 text-indigo-600 rounded-xl font-medium hover:bg-indigo-100 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2 border border-indigo-100"
+          className="w-full py-3 bg-stone-50 text-[#5D4037] rounded-xl font-medium hover:bg-stone-100 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2 border border-stone-200 shadow-sm"
         >
           {scanning ? (
              <>
-               <div className="w-5 h-5 border-2 border-indigo-600/30 border-t-indigo-600 rounded-full animate-spin" />
+               <div className="w-5 h-5 border-2 border-[#8D6E63]/30 border-t-[#8D6E63] rounded-full animate-spin" />
                Extracting receipt data...
              </>
           ) : (
@@ -145,11 +147,11 @@ export function ExpenseForm({ events, onSuccess, onCancel }: ExpenseFormProps) {
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-1">Amount</label>
+          <label className="block text-xs uppercase tracking-widest font-medium text-stone-500 mb-2">Amount</label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 font-medium">₹</span>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 font-medium">₹</span>
             <input
               type="number"
               required
@@ -157,19 +159,19 @@ export function ExpenseForm({ events, onSuccess, onCancel }: ExpenseFormProps) {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0.00"
-              className="w-full pl-8 pr-4 py-2 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none"
+              className="w-full pl-9 pr-4 py-3.5 bg-white border border-stone-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-stone-100 focus:border-[#8D6E63] transition-all outline-none font-medium text-[#3E2723] shadow-sm"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-1">Category</label>
+          <label className="block text-xs uppercase tracking-widest font-medium text-stone-500 mb-2">Category</label>
           <div className="relative">
-            <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+            <Tag className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none appearance-none"
+              className="w-full pl-11 pr-4 py-3.5 bg-white border border-stone-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-stone-100 focus:border-[#8D6E63] transition-all outline-none appearance-none font-medium text-[#3E2723] shadow-sm"
             >
               {CATEGORIES.map(c => (
                 <option key={c} value={c}>{c}</option>
@@ -179,42 +181,42 @@ export function ExpenseForm({ events, onSuccess, onCancel }: ExpenseFormProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-1">Date</label>
+          <label className="block text-xs uppercase tracking-widest font-medium text-stone-500 mb-2">Date</label>
           <div className="relative">
-            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+            <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
             <input
               type="date"
               required
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none"
+              className="w-full pl-11 pr-4 py-3.5 bg-white border border-stone-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-stone-100 focus:border-[#8D6E63] transition-all outline-none font-medium text-[#3E2723] shadow-sm"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-1">Description (Optional)</label>
+          <label className="block text-xs uppercase tracking-widest font-medium text-stone-500 mb-2">Description (Optional)</label>
           <div className="relative">
-            <MessageSquare className="absolute left-3 top-3 w-4 h-4 text-zinc-400" />
+            <MessageSquare className="absolute left-4 top-4 w-4 h-4 text-stone-400" />
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="What did you spend on?"
               rows={3}
-              className="w-full pl-10 pr-4 py-2 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none resize-none"
+              className="w-full pl-11 pr-4 py-3.5 bg-white border border-stone-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-stone-100 focus:border-[#8D6E63] transition-all outline-none resize-none font-medium text-[#3E2723] shadow-sm"
             />
           </div>
         </div>
 
         {events.length > 0 && (
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-1">Link to Event (Optional)</label>
+            <label className="block text-xs uppercase tracking-widest font-medium text-stone-500 mb-2">Link to Event (Optional)</label>
             <div className="relative">
-              <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+              <Tag className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
               <select
                 value={eventId}
                 onChange={(e) => setEventId(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none appearance-none"
+                className="w-full pl-11 pr-4 py-3.5 bg-white border border-stone-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-stone-100 focus:border-[#8D6E63] transition-all outline-none appearance-none font-medium text-[#3E2723] shadow-sm"
               >
                 <option value="">None</option>
                 {events.map(ev => (
@@ -228,7 +230,7 @@ export function ExpenseForm({ events, onSuccess, onCancel }: ExpenseFormProps) {
         <button
           type="submit"
           disabled={loading || scanning}
-          className="w-full py-3 bg-zinc-900 text-white rounded-xl font-medium hover:bg-zinc-800 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+          className="w-full py-4 mt-4 bg-[#4E342E] text-white rounded-xl font-medium hover:bg-[#3E2723] active:scale-[0.98] transition-all shadow-md disabled:opacity-50 flex items-center justify-center gap-2"
         >
           {loading ? (
             <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

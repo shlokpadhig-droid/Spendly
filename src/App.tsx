@@ -14,7 +14,8 @@ import {
   Calendar as CalendarIcon,
   ChevronLeft,
   ChevronRight,
-  LogIn
+  LogIn,
+  Target
 } from 'lucide-react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth, login, logout } from './lib/firebase';
@@ -84,66 +85,71 @@ export default function App() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-zinc-50">
-        <div className="w-10 h-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
+        <div className="w-10 h-10 border-4 border-emerald-100 border-t-emerald-600 rounded-2xl animate-spin" />
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-50 p-6">
+      <div className="min-h-screen flex items-center justify-center p-6 bg-[#FDFBF7] relative overflow-hidden">
+        {/* Decorative background blurs */}
+        <div className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] bg-[#8D6E63]/10 rounded-full blur-[120px]" />
+        
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white p-10 rounded-3xl shadow-xl w-full max-w-md text-center border border-zinc-100"
+          initial={{ opacity: 0, scale: 0.95, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          className="p-12 text-center bg-white/60 backdrop-blur-md rounded-2xl shadow-xl border border-stone-200 w-full max-w-lg z-10"
         >
-          <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <Wallet className="w-8 h-8 text-indigo-600" />
+          <div className="w-24 h-24 flex items-center justify-center mx-auto mb-8 bg-[#5D4037] border-0 rounded-2xl shadow-lg">
+            <Wallet className="w-12 h-12 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-zinc-900 mb-2">Welcome to Spendly</h1>
-          <p className="text-zinc-500 mb-8">Track your expenses, set budgets, and take control of your personal finances.</p>
-          <button
+          <h1 className="text-5xl font-serif mb-4 text-[#3E2723] tracking-tighter">
+            Spendly
+          </h1>
+          <p className="text-[#8D6E63] mb-10 text-lg font-sans">Elegant financial tracking.</p>
+          <motion.button
+            whileHover={{ scale: 1.02, y: -2 }}
+            whileTap={{ scale: 0.98 }}
             onClick={login}
-            className="w-full py-4 bg-zinc-900 text-white rounded-2xl font-semibold hover:bg-zinc-800 transition-all flex items-center justify-center gap-3 active:scale-[0.98]"
+            className="w-full py-5 text-white font-medium flex items-center justify-center gap-3 transition-all bg-[#4E342E] rounded-xl hover:bg-[#3E2723] shadow-md"
           >
-            <LogIn className="w-5 h-5" />
+            <LogIn className="w-6 h-6" />
             Continue with Google
-          </button>
+          </motion.button>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 pb-20 overflow-x-hidden">
+    <div className="min-h-screen pb-32 overflow-x-hidden transition-colors duration-500 bg-[#FDFBF7]">
       {/* Header */}
-      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-zinc-100">
-        <div className="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 flex items-center justify-center">
-              <img src="/favicon.svg" alt="Spendly Logo" className="w-full h-full drop-shadow-md" />
-            </div>
+      <header className="fixed top-6 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-2rem)] max-w-5xl">
+        <div className="h-20 bg-white/80 backdrop-blur-xl border border-stone-200 shadow-sm rounded-2xl px-6 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <motion.div className="w-12 h-12 bg-[#5D4037] border-0 rounded-xl flex items-center justify-center shadow-md">
+              <Wallet className="w-6 h-6 text-white" />
+            </motion.div>
             <div>
-              <h1 className="font-bold text-zinc-900 leading-none">Spendly</h1>
-              <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mt-1 block">Expense Pro</span>
+              <h1 className="leading-none text-[#3E2723] font-serif text-2xl tracking-tight">Spendly</h1>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 bg-white p-2 rounded-xl border border-stone-200">
             <button
               onClick={() => setShowBudgets(true)}
-              className="p-2 text-zinc-400 hover:text-indigo-600 hover:bg-zinc-50 rounded-xl transition-all"
+              className="p-3 transition-all text-[#8D6E63] hover:text-[#4E342E] hover:bg-stone-50 rounded-lg"
               title="Budget Settings"
             >
               <TrendingUp className="w-5 h-5" />
             </button>
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-zinc-50 rounded-full border border-zinc-100">
-              {user.photoURL && <img src={user.photoURL} className="w-5 h-5 rounded-full" alt="avatar" />}
-              <span className="text-xs font-semibold text-zinc-600 truncate max-w-[100px]">{user.displayName}</span>
+            <div className="hidden sm:flex items-center gap-3 px-2 border-x border-stone-200">
+              <span className="text-sm font-medium text-[#4E342E]">{user.displayName?.split(' ')[0]}</span>
             </div>
             <button
               onClick={logout}
-              className="p-2 text-zinc-400 hover:text-red-500 hover:bg-zinc-50 rounded-xl transition-all"
+              className="p-3 transition-all text-[#8D6E63] hover:text-red-700 hover:bg-red-50 rounded-lg"
               title="Logout"
             >
               <LogOut className="w-5 h-5" />
@@ -152,48 +158,51 @@ export default function App() {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-6 pt-10">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+      <main className="max-w-5xl mx-auto px-4 pt-40">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <h2 className="text-3xl font-bold text-zinc-900 mb-1">Financial Overview</h2>
-            <div className="flex items-center gap-2 text-zinc-500">
-              <CalendarIcon className="w-4 h-4" />
-              <div className="flex items-center gap-4">
-                <button onClick={handlePrevMonth} className="hover:text-zinc-900 transition-colors">
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <span className="text-sm font-semibold min-w-[100px] text-center">
-                  {format(currentMonth, 'MMMM yyyy')}
-                </span>
-                <button onClick={handleNextMonth} className="hover:text-zinc-900 transition-colors">
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
+            <p className="text-[#8D6E63] font-medium uppercase tracking-widest text-sm mb-2 opacity-80">Overview</p>
+            <div className="flex items-center gap-4 bg-white px-6 py-4 rounded-2xl border border-stone-200 shadow-sm">
+              <button onClick={handlePrevMonth} className="transition-colors text-[#8D6E63] hover:text-[#4E342E] p-2 hover:bg-stone-50 rounded-lg">
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <span className="text-xl min-w-[140px] text-center font-serif text-[#3E2723]">
+                {format(currentMonth, 'MMMM yyyy')}
+              </span>
+              <button onClick={handleNextMonth} className="transition-colors text-[#8D6E63] hover:text-[#4E342E] p-2 hover:bg-stone-50 rounded-lg">
+                <ChevronRight className="w-5 h-5" />
+              </button>
             </div>
           </div>
-
-          <button
-            onClick={() => setShowForm(true)}
-            className="h-14 px-8 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-500 shadow-xl shadow-indigo-100 flex items-center justify-center gap-3 transition-all active:scale-[0.98]"
-          >
-            <Plus className="w-5 h-5" />
-            <span className="hidden sm:inline">New Expense</span>
-          </button>
           
-          <button
-            onClick={() => setShowEventForm(true)}
-            className="h-14 px-8 bg-zinc-900 text-white rounded-2xl font-bold hover:bg-zinc-800 shadow-xl shadow-zinc-200 flex items-center justify-center gap-3 transition-all active:scale-[0.98] ml-3"
-          >
-            <Plus className="w-5 h-5" />
-            <span className="hidden sm:inline">New Event</span>
-          </button>
+          <div className="flex gap-4">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowEventForm(true)}
+              className="h-16 px-8 text-[#5D4037] opacity-90 font-medium flex items-center justify-center gap-3 transition-all bg-white border border-stone-200 rounded-xl hover:bg-stone-50 shadow-sm"
+            >
+              <Target className="w-5 h-5" />
+              <span className="hidden sm:inline">New Event</span>
+            </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowForm(true)}
+              className="h-16 px-8 text-white font-medium flex items-center justify-center gap-3 transition-all bg-[#4E342E] rounded-xl hover:bg-[#3E2723] shadow-md"
+            >
+              <Plus className="w-6 h-6" />
+              <span className="hidden sm:inline">Add Expense</span>
+            </motion.button>
+          </div>
         </div>
 
-        <section className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <section className="animate-in fade-in slide-in-from-bottom-8 duration-700">
           <Dashboard expenses={filteredExpenses} budgets={budgets} />
         </section>
 
-        <section className="mt-12 animate-in fade-in slide-in-from-bottom-6 duration-1000">
+        <section className="mt-16 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150">
           <EventTracker 
             events={events} 
             expenses={expenses} 
@@ -204,7 +213,7 @@ export default function App() {
           />
         </section>
 
-        <section className="mt-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+        <section className="mt-16 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
           <ExpenseList 
             expenses={filteredExpenses} 
             onDelete={async (id) => {
@@ -216,10 +225,10 @@ export default function App() {
       </main>
 
       {/* Floating Action Button for Mobile */}
-      <div className="fixed bottom-8 right-8 md:hidden">
+      <div className="fixed bottom-8 right-6 md:hidden z-30">
         <button
           onClick={() => setShowForm(true)}
-          className="w-16 h-16 bg-indigo-600 text-white rounded-2xl shadow-2xl flex items-center justify-center active:scale-[0.9] transition-transform"
+          className="w-16 h-16 bg-[#4E342E] text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform"
         >
           <Plus className="w-8 h-8" />
         </button>
@@ -234,7 +243,7 @@ export default function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowForm(false)}
-              className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm"
+              className="absolute inset-0 bg-[#0f172a]/40 backdrop-blur-md"
             />
             <ExpenseForm 
               events={events}
@@ -257,7 +266,7 @@ export default function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowBudgets(false)}
-              className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm"
+              className="absolute inset-0 bg-[#0f172a]/40 backdrop-blur-md"
             />
             <BudgetSettings 
               onSaved={() => {
@@ -279,7 +288,7 @@ export default function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowEventForm(false)}
-              className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm"
+              className="absolute inset-0 bg-[#0f172a]/40 backdrop-blur-md"
             />
             <EventForm 
               onSuccess={() => {
@@ -294,3 +303,4 @@ export default function App() {
     </div>
   );
 }
+

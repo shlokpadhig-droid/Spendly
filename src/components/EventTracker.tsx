@@ -25,8 +25,8 @@ export function EventTracker({ events, expenses, onDelete }: EventTrackerProps) 
 
   return (
     <div className="space-y-6">
-      <h3 className="font-semibold text-zinc-900 flex items-center gap-2">
-        <Target className="w-5 h-5 text-indigo-500" /> 
+      <h3 className="font-serif flex items-center gap-3 text-[#3E2723] text-2xl">
+        <Target className="w-8 h-8 text-white bg-[#5D4037] p-1.5 rounded-xl shadow-sm border border-stone-200" /> 
         Tracked Events
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -37,44 +37,44 @@ export function EventTracker({ events, expenses, onDelete }: EventTrackerProps) 
           const isOver = percentage > 100;
 
           return (
-            <div key={event.id} className="bg-white p-6 rounded-2xl border border-zinc-100 shadow-sm relative group">
+            <div key={event.id} className="p-8 relative group transition-all bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md hover:-translate-y-1">
               <button
                 onClick={() => event.id && onDelete(event.id)}
-                className="absolute top-4 right-4 p-2 text-zinc-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all opacity-0 group-hover:opacity-100"
+                className="absolute top-6 right-6 p-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 hover:scale-110 text-stone-400 hover:text-red-600 hover:bg-red-50 border border-transparent"
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash2 className="w-5 h-5" />
               </button>
               
-              <h4 className="font-bold text-zinc-900 text-lg pr-8">{event.name}</h4>
-              <p className="text-xs text-zinc-500 flex items-center gap-1 mt-1 mb-4">
-                <Calendar className="w-3 h-3" />
-                {format(ensureDate(event.date), 'MMM d, yyyy')}
+              <h4 className="text-xl pr-10 font-medium text-stone-800 truncate mb-1">{event.name}</h4>
+              <p className="text-sm flex items-center gap-1.5 mb-6 text-stone-500 tracking-wide">
+                <Calendar className="w-4 h-4" />
+                {format(ensureDate(event.date), 'MMMM d, yyyy')}
               </p>
 
-              <div className="flex justify-between items-end mb-2">
+              <div className="flex justify-between items-end mb-3">
                 <div>
-                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-0.5">Budget</p>
-                  <p className="font-semibold text-zinc-700">{CURRENCY_SYMBOL}{event.budget.toLocaleString()}</p>
+                  <p className="text-[10px] uppercase tracking-widest mb-1 font-medium text-stone-500">Budget</p>
+                  <p className="font-medium text-stone-700 bg-stone-50 px-2 py-0.5 rounded-lg border border-stone-200">{CURRENCY_SYMBOL}{event.budget.toLocaleString()}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-0.5">Spent</p>
-                  <p className={`font-bold ${isOver ? 'text-red-500' : 'text-indigo-600'}`}>
+                  <p className="text-[10px] uppercase tracking-widest mb-1 font-medium text-stone-500">Spent</p>
+                  <p className={`font-serif text-3xl tracking-tight ${isOver ? 'text-red-600' : 'text-[#795548]'}`}>
                     {CURRENCY_SYMBOL}{spent.toLocaleString()}
                   </p>
                 </div>
               </div>
 
-              <div className="h-2 w-full bg-zinc-100 rounded-full overflow-hidden mb-4">
+              <div className="w-full overflow-hidden mb-5 h-3 rounded-full bg-stone-100 border border-stone-200">
                 <div 
-                  className={`h-full rounded-full transition-all duration-500 ${isOver ? 'bg-red-500' : 'bg-indigo-500'}`} 
+                  className={`h-full rounded-full transition-all duration-700 shadow-sm ${isOver ? 'bg-red-500' : 'bg-[#A1887F]'}`} 
                   style={{ width: `${Math.min(100, percentage)}%` }} 
                 />
               </div>
 
-              <p className="text-xs font-medium text-zinc-500">
+              <p className="text-[11px] font-medium uppercase tracking-widest px-3 py-1.5 rounded-xl inline-block bg-white border border-stone-200">
                 {isOver 
                   ? <span className="text-red-500">Over budget by {CURRENCY_SYMBOL}{(spent - event.budget).toLocaleString()}</span>
-                  : <span>{CURRENCY_SYMBOL}{(event.budget - spent).toLocaleString()} remaining</span>
+                  : <span className="text-stone-500">{CURRENCY_SYMBOL}{(event.budget - spent).toLocaleString()} remaining</span>
                 }
               </p>
             </div>
